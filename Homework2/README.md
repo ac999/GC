@@ -1,6 +1,7 @@
 https://profs.info.uaic.ro/~ghirvu/gpc/tema2/
 
 based on: https://profs.info.uaic.ro/~ghirvu/gpc/tema2/t02p1.cpp
+
 Drawing graphs using OpenGL:
 
 Press "1" for Concoid of Nicomedes;(from example);
