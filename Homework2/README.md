@@ -6,7 +6,7 @@ Drawing graphs using OpenGL:
 
 Press "1" for Concoid of Nicomedes;(from example);
 
-Press "2" for |sin x| * e^(-sin x), x in [0.8 * pi](from example);
+Press "2" for |sin x| * e^(-sin x), x in [0, 8 * pi](from example);
 
 Press "3" for f(x)=1 if x=0, d(x)/x if x in (0,100], where d(x) is the distance from x to the nearest integer;
 
