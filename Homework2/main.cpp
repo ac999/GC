@@ -224,7 +224,7 @@ void Display9(double a){
 	glEnd();
 
     glBegin(GL_LINE_STRIP);
-	glVertex2f(TransformX(a*sqrt(2*cos(2*(ratio-pi4))),-pi4),TransformY(a*sqrt(2*cos(2*(ratio-pi4))),-pi4));
+	glVertex2f(TransformX(a*sqrt(2*cos(2*(ratio-pi4))),ratio-pi4),TransformY(a*sqrt(2*cos(2*(ratio-pi4))),ratio-pi4));
 	for (t=-pi4+ratio;t<pi4;t+=ratio){
 		r=-a*sqrt(2*cos(2*t));
 		glVertex2f(TransformX(r,t),TransformY(r,t));
