@@ -211,7 +211,7 @@ double TransformY(double r, double t){
 }
 
 void Display9(double a){
-	double ratio=0.05;
+	double ratio=0.01;
 	double r,t; r=t=0;
 	double pi4=atan(1);
 
@@ -220,7 +220,14 @@ void Display9(double a){
 	for (t=-pi4+ratio;t<pi4;t+=ratio){
 		r=a*sqrt(2*cos(2*t));
 		glVertex2f(TransformX(r,t),TransformY(r,t));
-		glVertex2f(TransformX(-r,t),TransformY(-r,t));
+	}
+	glEnd();
+
+    glBegin(GL_LINE_STRIP);
+	glVertex2f(TransformX(a*sqrt(2*cos(2*(ratio-pi4))),-pi4),TransformY(a*sqrt(2*cos(2*(ratio-pi4))),-pi4));
+	for (t=-pi4+ratio;t<pi4;t+=ratio){
+		r=-a*sqrt(2*cos(2*t));
+		glVertex2f(TransformX(r,t),TransformY(r,t));
 	}
 	glEnd();
 }
