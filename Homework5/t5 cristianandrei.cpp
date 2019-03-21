@@ -4,14 +4,14 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#define dim 300
+#define dim 400
 // max nr of iterations for testing apartenence to Mandelbrot set
 #define NRITER_M 5000
 // max mod for testing apartenence to Mandelbrot set
 #define MODMAX_M 10000000
 // raions for CMandelbrot
-#define RX_M 0.05
-#define RY_M 0.05
+#define RX_M 0.01
+#define RY_M 0.01
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -109,6 +109,8 @@ public:
 	}
 	~CMandelbrot(){}
 
+  void setc(CComplex v){m.c=v;}
+
 	void setmodmax(double v){assert(v <= MODMAX_M); m.modmax = v;}
 	double getmax(){return m.modmax;}
 
@@ -124,16 +126,17 @@ public:
     CComplex z1;
     
     for (int i = 1; i < m.nriter; i++){
-      z1 = z0*z0 + m.c;
+      z1 = z0*z0 + x;
 
       if (z1.getModul() > 2){
         rez = i;
+        fprintf(stdout, "Iteration %d: %d + %di\n",i,z1.getRe(),z1.getIm());
         break;
       }
-      else if (z1.getModul() > m.modmax){
+      /*else if (z1.getModul() > m.modmax){
         rez = i;
         break;
-      }
+      }*/
       z0 = z1;
     }
     return rez;
@@ -144,8 +147,8 @@ public:
     glPushMatrix();
     glLoadIdentity();
 
-//    glTranslated((xmin + xmax) * 1.0 / (xmin - xmax), (ymin + ymax)  * 1.0 / (ymin - ymax), 0);
-//    glScaled(1.0 / (xmax - xmin), 1.0 / (ymax - ymin), 1);
+   glTranslated((xmin + xmax) * 1.0 / (xmin - xmax), (ymin + ymax)  * 1.0 / (ymin - ymax), 0);
+   glScaled(1.0 / (xmax - xmin), 1.0 / (ymax - ymin), 1);
     // display
     glBegin(GL_POINTS);
     for(double x = xmin; x <= xmax; x+=RX_M)
@@ -156,16 +159,16 @@ public:
 //        z.print(stdout);
         if (r != 0) 
         {
-         switch(r%9){
-            case 0: glColor3f(1.0,0.1,0.1);
+         switch(r%3){
+            case 0: glColor3f(0.1,0.1,1.0);
             case 1: glColor3f(0.1,1.0,0.1);
-            case 2: glColor3f(0.1,0.1,1.0); 
-            case 3: glColor3f(1.0,1.0,0.1);
-            case 4: glColor3f(1.0,0.1,1.0);
-            case 5: glColor3f(0.1,1.0,1.0);
-            case 6: glColor3f(1.0,0.5,0.5);
-            case 7: glColor3f(0.5,1.0,0.5);
-            case 8: glColor3f(0.5,0.5,1.0);
+            case 2: glColor3f(0.9,0.1,0.1); 
+            // case 3: glColor3f(1.0,1.0,0.1);
+            // case 4: glColor3f(1.0,0.1,1.0);
+            // case 5: glColor3f(0.1,1.0,1.0);
+            // case 6: glColor3f(1.0,0.5,0.5);
+            // case 7: glColor3f(0.5,1.0,0.5);
+            // case 8: glColor3f(0.5,0.5,1.0);
           }
           glVertex3d(x,y,0);
         }
@@ -186,32 +189,22 @@ private:
 	} m;
 };
 
-// Mandelbrot set for z0 = 0 and c = -2-2i
+// points that are not part of Mandelbrot set for c = -2-2i
 void Display1() {
-  glPointSize(1);
-  CComplex c(1,1);
-  CMandelbrot cm(c);
 
-  cm.setnriter(50);
+  CMandelbrot cm;
+
+  cm.setnriter(30);
   cm.display(-2, -2, 2, 2);
 }
 
-// Mandelbrot set for z0 = 0 and c = -0.012+0.74i
-void Display2() {
-  CComplex c(-0.012, 0.74);
-  CMandelbrot cm(c);
-
-  cm.setnriter(30);
-  cm.display(-1, -1, 1, 1);
-}
+// points that are not part of Mandelbrot set for c = -0.012+0.74i
 
 void Init(void) {
 
    glClearColor(1.0,1.0,1.0,1.0);
 
    glLineWidth(1);
-
-//   glPointSize(3);
 
    glPolygonMode(GL_FRONT, GL_LINE);
 }
@@ -222,10 +215,7 @@ void Display(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     Display1();
     break;
-  case '2':
-    glClear(GL_COLOR_BUFFER_BIT);
-    Display2();
-    break;
+ 
   default:
     break;
   }
