@@ -21,9 +21,7 @@
 
 #include <GL/glut.h>
 
-unsigned char prevKey;
-int nivel = 0;
-
+// exercise 2, Mandelbrot set;
 class CComplex {
 public:
   CComplex() : re(0.0), im(0.0) {}
@@ -130,7 +128,7 @@ public:
 
       if (z1.getModul() > 2){
         rez = i;
-        fprintf(stdout, "Iteration %d: %d + %di\n",i,z1.getRe(),z1.getIm());
+        fprintf(stdout, "Mandelbrot#Iteration %d: %d + %di\n",i,z1.getRe(),z1.getIm());
         break;
       }
       /*else if (z1.getModul() > m.modmax){
@@ -188,7 +186,245 @@ void Display1() {
   cm.display(-2, -2, 2, 2);
 }
 
-// points that are not part of Mandelbrot set for c = -0.012+0.74i
+// exercise 4:
+
+unsigned char prevKey;
+int level = 0;
+
+class C2coord
+{
+public:
+  C2coord() 
+  {
+    m.x = m.y = 0;
+  }
+
+  C2coord(double x, double y) 
+  {
+    m.x = x;
+    m.y = y;
+  }
+
+  C2coord(const C2coord &p) 
+  {
+    m.x = p.m.x;
+    m.y = p.m.y;
+  }
+
+  C2coord &operator=(C2coord &p)
+  {
+    m.x = p.m.x;
+    m.y = p.m.y;
+    return *this;
+  }
+
+  int operator==(C2coord &p)
+  {
+    return ((m.x == p.m.x) && (m.y == p.m.y));
+  }
+
+protected:
+  struct SDate
+  {
+    double x,y;
+  } m;
+};
+
+class CPoint : public C2coord
+{
+public:
+  CPoint() : C2coord(0.0, 0.0)
+  {}
+
+  CPoint(double x, double y) : C2coord(x, y)
+  {}
+
+  CPoint &operator=(const CPoint &p)
+  {
+    m.x = p.m.x;
+    m.y = p.m.y;
+    return *this;
+  }
+
+  void setxy(double &x, double &y)
+  {
+    x = m.x;
+    y = m.y;
+  }
+
+  int operator==(CPoint &p)
+  {
+    return ((m.x == p.m.x) && (m.y == p.m.y));
+  }
+
+  void mark()
+  {
+    glBegin(GL_POINTS);
+      glVertex2d(m.x, m.y);
+    glEnd();
+  }
+  
+  void print(FILE *fis)
+  {
+    fprintf(fis, "(%+f,%+f)", m.x, m.y);
+  }
+
+};
+
+class CVector : public C2coord
+{
+public:
+  CVector() : C2coord(0.0, 0.0)
+  {
+    normalize();
+  }
+
+  CVector(double x, double y) : C2coord(x, y)
+  {
+    normalize();
+  }
+
+  CVector &operator=(CVector &p)
+  {
+    m.x = p.m.x;
+    m.y = p.m.y;
+    return *this;
+  }
+
+  int operator==(CVector &p)
+  {
+    return ((m.x == p.m.x) && (m.y == p.m.y));
+  }
+
+  CPoint getDest(CPoint &orig, double length)
+  {
+    double x, y;
+    orig.setxy(x, y);
+    CPoint p(x + m.x * length, y + m.y * length);
+    return p;
+  }
+
+  void rotation(double degrees)
+  {
+    double x = m.x;
+    double y = m.y;
+    double t = 2 * (4.0 * atan(1.0)) * degrees / 360.0;
+    m.x = x * cos(t) - y * sin(t);
+    m.y = x * sin(t) + y * cos(t);
+    normalize();
+  }
+
+  void draw(CPoint p, double length) 
+  {
+    double x, y;
+    p.setxy(x, y);
+    glColor3f(1.0, 0.1, 0.1);
+    glBegin(GL_LINE_STRIP);
+      glVertex2d(x, y);
+      glVertex2d(x + m.x * length, y + m.y * length);
+    glEnd();
+  }
+
+  void print(FILE *fis)
+  {
+    fprintf(fis, "%+fi %+fj", C2coord::m.x, C2coord::m.y);
+  }
+
+private:
+  void normalize()
+  {
+    double d = sqrt(C2coord::m.x * C2coord::m.x + C2coord::m.y * C2coord::m.y);
+    if (d != 0.0) 
+    {
+      C2coord::m.x = C2coord::m.x * 1.0 / d;
+      C2coord::m.y = C2coord::m.y * 1.0 / d;
+    }
+  }
+};
+
+class SquaresFractal
+  {
+public:
+  void segmentSquare(double length, int level, CPoint &p, CVector v)
+  {
+    CPoint p1;
+    if (level == 0) 
+    {
+      v.draw(p, length);
+    }
+    else
+    {
+  //    v.print(stderr);
+  //    fprintf(stderr, "\n");
+      segmentSquare(length / 3.0, level - 1, p, v);
+      p1 = v.getDest(p, length / 3.0);
+      v.rotation(60);
+  //    v.print(stderr);
+  //    fprintf(stderr, "\n");
+      segmentSquare(length / 3.0, level - 1, p1, v);
+      p1 = v.getDest(p1, length / 3.0);
+      v.rotation(-120);
+  //    v.print(stderr);
+  //    fprintf(stderr, "\n");
+      segmentSquare(length / 3.0, level - 1, p1, v);
+      p1 = v.getDest(p1, length / 3.0);
+      v.rotation(60);
+  //    v.print(stderr);
+  //    fprintf(stderr, "\n");
+      segmentSquare(length / 3.0, level - 1, p1, v);
+    }
+  }
+
+  void display(double length, int level)
+  {
+    CVector v1(-1.0, 0.0);
+    CPoint p1(1.0, 1.0);
+
+    CVector v2(1.0, 0.0);
+    CPoint p2(-1.0,-1.0);
+
+    CVector v3(0.0,1.0);
+    CPoint p3(1.0,-1.0);
+
+    CVector v4(0.0,-1.0);
+    CPoint p4(-1.0,1.0);
+
+    segmentSquare(length, level, p1, v1);
+    segmentSquare(length, level, p2, v2);
+    segmentSquare(length, level, p3, v3);
+    segmentSquare(length, level, p4, v4);
+  }
+};
+
+void Display2() {
+  SquaresFractal sqf;
+  sqf.display(2, level);
+
+  char c[3];
+  sprintf(c, "%2d", level);
+  glRasterPos2d(-0.98,-0.98);
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '=');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
+
+  glRasterPos2d(-1.0,0.9);
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'p');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'c');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 't');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'u');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, ' ');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '1');
+
+  level++;
+}
 
 void Init(void) {
 
@@ -201,11 +437,27 @@ void Init(void) {
 
 void Display(void) {
   switch(prevKey) {
+  case '0':
+    glClear(GL_COLOR_BUFFER_BIT);
+    level = 0;
+    fprintf(stderr, "ex4#level = %d\n", level);
+    break;
   case '1':
     glClear(GL_COLOR_BUFFER_BIT);
     Display1();
     break;
- 
+  case '2':
+    glClear(GL_COLOR_BUFFER_BIT);
+    Display2();
+    break;
+  /*case '3':
+    glClear(GL_COLOR_BUFFER_BIT);
+    Display3();
+    break;
+  case '4':
+    glClear(GL_COLOR_BUFFER_BIT);
+    Display4();
+    break;*/
   default:
     break;
   }
