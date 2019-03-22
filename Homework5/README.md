@@ -13,6 +13,8 @@ abs(zn) > 2 for all n>=0 | exists z in c, lim(n->inf)zn==z
 
 I have to create the following fractals:
 
-[image 1](images/to_do_ex4_a.gif)
-[image 2](images/to_do_ex4_b.jpg)
-[image 3](images/to_do_ex4_c.jpg)
+[Fig. 1](images/to_do_ex4_a.gif?raw=true "Fig #1")
+
+[Fig. 2](images/to_do_ex4_b.jpg?raw=true "Fig #2")
+
+[Fig. 3](images/to_do_ex4_c.jpg?raw=true "Fig #3")
