@@ -7,7 +7,7 @@ c not in Mandelbrot | c not in Julia-Fatou
 lim(n->inf)abs(zn)==inf | lim(n->inf)abs(zn)==inf or
 abs(zn) > 2 for all n>=0 | exists z in c, lim(n->inf)zn==z
 
-[Points that are not in the Mandelbrot set](images/mandelbrot.png)
+[Points that are not in the Mandelbrot set](images/mandelbrot.png?raw=true "Mandelbrot")
 
 # Exercise #4:
 
