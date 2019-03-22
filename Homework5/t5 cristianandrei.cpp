@@ -1,10 +1,10 @@
-// parts of code taken from:
+// (parts of) most code taken from:
 // https://profs.info.uaic.ro/~ghirvu/gpc/tema5/t5p1.cpp
 // https://profs.info.uaic.ro/~ghirvu/gpc/tema5/t5p3.cpp
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#define dim 400
+#define dim 500
 // max nr of iterations for testing apartenence to Mandelbrot set
 #define NRITER_M 5000
 // max mod for testing apartenence to Mandelbrot set
@@ -94,35 +94,35 @@ CComplex operator*(CComplex &c1, CComplex &c2)
 
 class CMandelbrot{
 public:
-	CMandelbrot(){
-		m.nriter = NRITER_M;
-		m.modmax = MODMAX_M;
-	}
-	CMandelbrot(CComplex &c){
-		m.c = c;
-		m.nriter = NRITER_M;
+  CMandelbrot(){
+    m.nriter = NRITER_M;
+    m.modmax = MODMAX_M;
+  }
+  CMandelbrot(CComplex &c){
+    m.c = c;
+    m.nriter = NRITER_M;
     int rez=0;
     // table for the iterative process z_n+1 = z_n * z_n + c;
     CComplex z0(0,0);
     CComplex z1;
-		m.modmax = MODMAX_M;
-	}
-	~CMandelbrot(){}
+    m.modmax = MODMAX_M;
+  }
+  ~CMandelbrot(){}
 
   void setc(CComplex v){m.c=v;}
 
-	void setmodmax(double v){assert(v <= MODMAX_M); m.modmax = v;}
-	double getmax(){return m.modmax;}
+  void setmodmax(double v){assert(v <= MODMAX_M); m.modmax = v;}
+  double getmax(){return m.modmax;}
 
-	void setnriter(int v){assert(v <= NRITER_M); m.nriter = v;}
-	int getnriter(){return m.nriter;}
+  void setnriter(int v){assert(v <= NRITER_M); m.nriter = v;}
+  int getnriter(){return m.nriter;}
 
-	// test if x is in Mandelbrot set
-	// returns 0 if does, else it returns the nr. of iterations;
-	int isIn(CComplex &x){
-		int rez=0;
-		// table for the iterative process z_n+1 = z_n * z_n + c;
-		CComplex z0(0,0);
+  // test if x is in Mandelbrot set
+  // returns 0 if does, else it returns the nr. of iterations;
+  int isIn(CComplex &x){
+    int rez=0;
+    // table for the iterative process z_n+1 = z_n * z_n + c;
+    CComplex z0(0,0);
     CComplex z1;
     
     for (int i = 1; i < m.nriter; i++){
@@ -140,7 +140,7 @@ public:
       z0 = z1;
     }
     return rez;
-	}
+  }
 
   void display(double xmin, double ymin, double xmax, double ymax)
   {
@@ -159,17 +159,7 @@ public:
 //        z.print(stdout);
         if (r != 0) 
         {
-         switch(r%3){
-            case 0: glColor3f(0.1,0.1,1.0);
-            case 1: glColor3f(0.1,1.0,0.1);
-            case 2: glColor3f(0.9,0.1,0.1); 
-            // case 3: glColor3f(1.0,1.0,0.1);
-            // case 4: glColor3f(1.0,0.1,1.0);
-            // case 5: glColor3f(0.1,1.0,1.0);
-            // case 6: glColor3f(1.0,0.5,0.5);
-            // case 7: glColor3f(0.5,1.0,0.5);
-            // case 8: glColor3f(0.5,0.5,1.0);
-          }
+          glColor3f((r%3)/3.0,(r%5)/5.0,(r%2)/2.0);
           glVertex3d(x,y,0);
         }
       }
@@ -180,13 +170,13 @@ public:
   }
 
 private:
-	struct SDate
-	{
-		CComplex c;
-		// nr of iterations;
-		int nriter;
-		double modmax;
-	} m;
+  struct SDate
+  {
+    CComplex c;
+    // nr of iterations;
+    int nriter;
+    double modmax;
+  } m;
 };
 
 // points that are not part of Mandelbrot set for c = -2-2i

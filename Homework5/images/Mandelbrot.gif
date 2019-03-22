@@ -1,0 +1,12 @@
+--2019-03-22 14:04:50--  https://profs.info.uaic.ro/~ghirvu/gpc/tema5/index_files/image019.gif
+Loaded CA certificate '/etc/ssl/certs/ca-certificates.crt'
+Resolving profs.info.uaic.ro (profs.info.uaic.ro)... 85.122.23.20
+Connecting to profs.info.uaic.ro (profs.info.uaic.ro)|85.122.23.20|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 2900 (2,8K) [image/gif]
+Saving to: ‘image019.gif’
+
+     0K ..                                                    100% 3,24M=0,001s
+
+2019-03-22 14:04:51 (3,24 MB/s) - ‘image019.gif’ saved [2900/2900]
+
