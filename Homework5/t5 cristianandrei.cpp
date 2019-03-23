@@ -177,15 +177,6 @@ private:
   } m;
 };
 
-// points that are not part of Mandelbrot set for c = -2-2i
-void Display1() {
-
-  CMandelbrot cm;
-
-  cm.setnriter(30);
-  cm.display(-2, -2, 2, 2);
-}
-
 // exercise 4:
 
 unsigned char prevKey;
@@ -356,38 +347,29 @@ public:
     {
   //    v.print(stderr);
   //    fprintf(stderr, "\n");
-      segmentSquare(length / 3.0, level - 1, p, v);
-      p1 = v.getDest(p, length / 3.0);
-      v.rotation(60);
-  //    v.print(stderr);
-  //    fprintf(stderr, "\n");
-      segmentSquare(length / 3.0, level - 1, p1, v);
-      p1 = v.getDest(p1, length / 3.0);
-      v.rotation(-120);
-  //    v.print(stderr);
-  //    fprintf(stderr, "\n");
-      segmentSquare(length / 3.0, level - 1, p1, v);
-      p1 = v.getDest(p1, length / 3.0);
-      v.rotation(60);
-  //    v.print(stderr);
-  //    fprintf(stderr, "\n");
-      segmentSquare(length / 3.0, level - 1, p1, v);
+      segmentSquare(length/3.0 , level - 1, p, v);
+    
+      p1 = v.getDest(p,length/3.0);
+      v.rotation(-90);
+
+      segmentSquare(length/3.0, level - 1, p1, v);
+
     }
   }
 
   void display(double length, int level)
   {
     CVector v1(-1.0, 0.0);
-    CPoint p1(1.0, 1.0);
+    CPoint p1(0.5, 0.5);
 
     CVector v2(1.0, 0.0);
-    CPoint p2(-1.0,-1.0);
+    CPoint p2(-0.5,-0.5);
 
     CVector v3(0.0,1.0);
-    CPoint p3(1.0,-1.0);
+    CPoint p3(0.5,-0.5);
 
     CVector v4(0.0,-1.0);
-    CPoint p4(-1.0,1.0);
+    CPoint p4(-0.5,0.5);
 
     segmentSquare(length, level, p1, v1);
     segmentSquare(length, level, p2, v2);
@@ -396,9 +378,105 @@ public:
   }
 };
 
+
+class CTree
+{
+public:
+  void arborePerron(double length, 
+                    int level, 
+                    double factordiviziune, 
+                    CPoint p, 
+                    CVector v)
+  {
+    assert(factordiviziune != 0);
+    CPoint p1, p2, p3;
+    if (level == 0) 
+    {
+    }
+    else
+    {
+      v.rotation(-45);
+      v.draw(p, length);
+      p1 = v.getDest(p, length);
+      arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
+
+      v.rotation(90);
+      v.draw(p, length);
+      p1 = v.getDest(p, length);
+      p2 = p1;
+
+
+      v.rotation(-45);
+      v.draw(p1, length);
+      p1 = v.getDest(p1, length);
+      p3 = p1;
+      // arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
+      v.rotation(-90);
+      v.draw(p1, length/2);
+      p1=v.getDest(p3,length/2);
+      arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
+      v.rotation(90);
+      v.rotation(45);
+      v.draw(p3, length/2);
+      p1=v.getDest(p3,length/2);
+      arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
+
+
+      v.rotation(-45);
+
+
+      p1 = p2;
+      v.rotation(75);
+      v.draw(p1, length);
+      p1 = v.getDest(p1, length);
+      p2 = p1;
+      arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
+
+      
+
+
+      // v.rotation(-45);
+      // v.draw(p3, length);
+      // p1=v.getDest(p1, length);
+
+      // v.rotation(45);
+      // v.draw(p1, length/2.0);
+      // p1 = v.getDest(p1, length/2.0);
+      // arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
+
+      // p1 = p2;
+      // v.rotation(-90);
+      // v.draw(p1, length/2.0);
+      // p1 = v.getDest(p1, length/2.0);
+      // arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
+    }
+  }
+
+  void display(double length, int level)
+  {
+    CVector v(0.0, -1.0);
+    CPoint p(0.5, 2.0);
+
+    v.draw(p, 0.25);
+    p = v.getDest(p, 0.25);
+    arborePerron(length, level, 0.4, p, v);
+  }
+};
+
+
+// points that are not part of Mandelbrot set
+void Display1() {
+
+  CMandelbrot cm;
+
+  cm.setnriter(30);
+  cm.display(-2, -2, 2, 2);
+}
+
+// picture 1
 void Display2() {
   SquaresFractal sqf;
-  sqf.display(2, level);
+  sqf.display(1, level);
 
   char c[3];
   sprintf(c, "%2d", level);
@@ -426,6 +504,41 @@ void Display2() {
   level++;
 }
 
+void Display3() {
+  CTree ct;
+
+  char c[3];
+  sprintf(c, "%2d", level);
+  glRasterPos2d(-0.98,-0.98);
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '=');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
+
+  glRasterPos2d(-1.0,-0.9);
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'p');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'c');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 't');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'u');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, ' ');
+  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '2');
+
+  glPushMatrix();
+  glLoadIdentity();
+  glScaled(0.4, 0.4, 1);
+  glTranslated(-0.5, -0.5, 0.0);
+  ct.display(0.7, level);
+  glPopMatrix();
+  level++;
+}
+
 void Init(void) {
 
    glClearColor(1.0,1.0,1.0,1.0);
@@ -450,14 +563,14 @@ void Display(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     Display2();
     break;
-  /*case '3':
+  case '3':
     glClear(GL_COLOR_BUFFER_BIT);
     Display3();
     break;
-  case '4':
-    glClear(GL_COLOR_BUFFER_BIT);
-    Display4();
-    break;*/
+  // case '4':
+  //   glClear(GL_COLOR_BUFFER_BIT);
+  //   Display4();
+  //   break;
   default:
     break;
   }
