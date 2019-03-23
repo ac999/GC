@@ -382,13 +382,13 @@ public:
 class CTree
 {
 public:
-  void arborePerron(double length, 
+  void teaTree(double length, 
                     int level, 
-                    double factordiviziune, 
+                    double divFactor, 
                     CPoint p, 
                     CVector v)
   {
-    assert(factordiviziune != 0);
+    assert(divFactor != 0);
     CPoint p1, p2, p3;
     if (level == 0) 
     {
@@ -398,7 +398,7 @@ public:
       v.rotation(-45);
       v.draw(p, length);
       p1 = v.getDest(p, length);
-      arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
+      teaTree(length * divFactor, level - 1, divFactor, p1, v);
 
       v.rotation(90);
       v.draw(p, length);
@@ -410,19 +410,21 @@ public:
       v.draw(p1, length);
       p1 = v.getDest(p1, length);
       p3 = p1;
-      // arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
-      v.rotation(-90);
+
+      v.rotation(-90);  // add rotation x
       v.draw(p1, length/2);
       p1=v.getDest(p3,length/2);
-      arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
-      v.rotation(90);
-      v.rotation(45);
+      teaTree(length * divFactor, level - 1, divFactor, p1, v);
+
+      v.rotation(90); // rollback rotation x;
+      
+      v.rotation(45); // add rotation y
       v.draw(p3, length/2);
       p1=v.getDest(p3,length/2);
-      arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
+      teaTree(length * divFactor, level - 1, divFactor, p1, v);
 
 
-      v.rotation(-45);
+      v.rotation(-45);  // rollback rotation y;
 
 
       p1 = p2;
@@ -430,25 +432,7 @@ public:
       v.draw(p1, length);
       p1 = v.getDest(p1, length);
       p2 = p1;
-      arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
-
-      
-
-
-      // v.rotation(-45);
-      // v.draw(p3, length);
-      // p1=v.getDest(p1, length);
-
-      // v.rotation(45);
-      // v.draw(p1, length/2.0);
-      // p1 = v.getDest(p1, length/2.0);
-      // arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
-
-      // p1 = p2;
-      // v.rotation(-90);
-      // v.draw(p1, length/2.0);
-      // p1 = v.getDest(p1, length/2.0);
-      // arborePerron(length * factordiviziune, level - 1, factordiviziune, p1, v);
+      teaTree(length * divFactor, level - 1, divFactor, p1, v);
     }
   }
 
@@ -459,7 +443,7 @@ public:
 
     v.draw(p, 0.25);
     p = v.getDest(p, 0.25);
-    arborePerron(length, level, 0.4, p, v);
+    teaTree(length, level, 0.4, p, v);
   }
 };
 
